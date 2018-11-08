@@ -4,6 +4,7 @@ import sys
 import requests
 import ijson
 import rules
+import time
 
 def get_review_result(access_token,text):
     request_url='https://aip.baidubce.com/rest/2.0/antispam/v2/spam?access_token='+access_token
@@ -16,6 +17,9 @@ def read_tianya_data(file_name,out_data_file_name=None):
     content = ijson.items(f,'item')
     output_index=0
     data_block_len = 0
+    labels_block=[]
+    token_access = '24.cdd63c7d0e512d06be4fedcc47314b24.2592000.1544150400.282335-14620368'
+
     for item in content:
         for k in item:
             content = item[k]
@@ -24,6 +28,9 @@ def read_tianya_data(file_name,out_data_file_name=None):
             if not rules.filter_rules(ite):
                 data_block.append(ite+'\n')
                 data_block_len+=1
+
+                labels_block.append(str(get_review_result(token_access, ite))+'\n')
+
                 if data_block_len==10000:
                     with open(out_data_file_name+str(output_index)+'.txt','w+',encoding='utf-8') as f_out:
                         try:
@@ -39,14 +46,49 @@ def read_tianya_data(file_name,out_data_file_name=None):
                             output_index += 1
                             print(output_index)
                             continue
+                    with open(out_data_file_name+str(output_index-1)+'_labels.txt','w+',encoding='utf-8') as label_out:
+                        try:
+                            label_out.writelines(labels_block)
+                            labels_block_block = []
 
+                        except:
+                            labels_block = []
+                            #print(output_index)
+                            continue
+
+def readTianyaByLine(file_tianya,label_tianya,access_token):
+     num=0
+     with open(label_tianya,'w+',encoding = 'utf-8') as label_out:
+         with  open(file_tianya,'r',encoding = 'utf-8') as f:
+            while True:
+                try:
+                    line = f.readline()
+                    if line =='' or line == None:
+                        break
+
+                    result = get_review_result(access_token,line.strip())
+                    #print(str(result))
+                    while 'error_msg' in str(result):
+                        print('error')
+                        result = get_review_result(access_token, line.strip())
+
+                    label_out.write(result)
+                    #time.sleep(1)
+                    label_out.write('\n')
+                except:
+                    continue
+
+                print(num)
+                num+=1
 
 
 
 def main():
-    read_tianya_data(sys.argv[1],sys.argv[2])
-    #token_access='24.cdd63c7d0e512d06be4fedcc47314b24.2592000.1544150400.282335-14620368'
+    #read_tianya_data(sys.argv[1],sys.argv[2])
+    token_access='24.cdd63c7d0e512d06be4fedcc47314b24.2592000.1544150400.282335-14620368'
     #print(get_review_result(token_access,'一起吃鸡吧'))
+    readTianyaByLine(sys.argv[1],sys.argv[2],token_access)
+
 
 
 if __name__ == '__main__':

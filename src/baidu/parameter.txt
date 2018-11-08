@@ -1,2 +1,8 @@
 E:\porn\tianya.json
 E:\porn\tianya\tianya_
+
+
+./data/tianya.json ./data/tianya_folder/tianya_
+
+
+/Users/hanz/data/tianya1/tianya_0.txt /Users/hanz/data/label1/label_0.txt
