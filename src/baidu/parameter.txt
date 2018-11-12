@@ -6,3 +6,8 @@ E:\porn\tianya\tianya_
 
 
 /Users/hanz/data/tianya1/tianya_0.txt /Users/hanz/data/label1/label_0.txt
+
+/Users/hanz/data/tianya1/tianya_.txt /Users/hanz/data/label1/label_.txt 6
+
+
+/Users/hanz/data/label1/label_0.txt /Users/hanz/data/label1/label_0

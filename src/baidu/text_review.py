@@ -56,14 +56,15 @@ def read_tianya_data(file_name,out_data_file_name=None):
                             #print(output_index)
                             continue
 
-def readTianyaByLine(file_tianya,label_tianya,access_token):
+def readTianyaByLine(file_tianya,label_tianya,file_index,access_token):
      num=0
-     with open(label_tianya,'w+',encoding = 'utf-8') as label_out:
-         with  open(file_tianya,'r',encoding = 'utf-8') as f:
+     with open(label_tianya[:30]+str(file_index)+label_tianya[30:],'a',encoding = 'utf-8') as label_out:
+         with  open(file_tianya[:32]+str(file_index)+file_tianya[32:],'r',encoding = 'utf-8') as f:
             while True:
                 try:
                     line = f.readline()
                     if line =='' or line == None:
+                        print(num)
                         break
 
                     result = get_review_result(access_token,line.strip())
@@ -76,18 +77,19 @@ def readTianyaByLine(file_tianya,label_tianya,access_token):
                     #time.sleep(1)
                     label_out.write('\n')
                 except:
+                    print('some thing wrong')
+                    print(num)
                     continue
-
-                print(num)
                 num+=1
 
 
 
 def main():
     #read_tianya_data(sys.argv[1],sys.argv[2])
-    token_access='24.cdd63c7d0e512d06be4fedcc47314b24.2592000.1544150400.282335-14620368'
-    #print(get_review_result(token_access,'一起吃鸡吧'))
-    readTianyaByLine(sys.argv[1],sys.argv[2],token_access)
+    token_access='24.254dee64f67b7ce9ba030e752b4afc13.2592000.1544426178.282335-14620368'
+    #print(get_review_result(token_access,'交易所问询不少， 嘴硬，  实力也硬，罗牛山封涨停真不含糊，'))
+
+    readTianyaByLine(sys.argv[1],sys.argv[2],sys.argv[3],token_access)
 
 
 
